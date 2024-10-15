@@ -1,7 +1,9 @@
+// ==================================== SINGLY LINKED LIST IMPLEMENTATION =============================================
+
 // linked list class
-class LinkedList {
-  private head: ListNode | null;
-  private tail: ListNode | null;
+class SinglyLinkedList {
+  private head: SinglyNode | null;
+  private tail: SinglyNode | null;
   private size: number;
 
   constructor() {
@@ -13,10 +15,10 @@ class LinkedList {
   //   insert an element in to linked list
   public insert(value: number): void {
     // creating a new list item
-    const new_node = new ListNode(value, null);
+    const new_node = new SinglyNode(value, null);
 
     // if the linked list is empty
-    if (this.tail === null) {
+    if (this.head === null) {
       this.head = new_node;
       this.tail = new_node;
       this.size += 1;
@@ -24,7 +26,9 @@ class LinkedList {
     }
 
     // if the linked list is not empty
-    this.tail.next_node = new_node;
+    if (this.tail) {
+      this.tail.next_node = new_node;
+    }
 
     // pointing tail to the newly added item to the linked list
     this.tail = new_node;
@@ -35,8 +39,9 @@ class LinkedList {
   public insertAt(value: number, target_index: number): boolean {
     if (!this.isValidIndex(target_index)) return false;
 
+    // note here that the linked list is not empty, we just adding a new value at the start of it
     if (target_index === 0) {
-      const new_node = new ListNode(value, this.head);
+      const new_node = new SinglyNode(value, this.head);
       this.head = new_node;
       this.size += 1;
       return true;
@@ -44,7 +49,7 @@ class LinkedList {
 
     if (target_index === this.size - 1) {
       if (this.tail) {
-        const new_node = new ListNode(value, null);
+        const new_node = new SinglyNode(value, null);
         this.tail.next_node = new_node;
         this.tail = new_node;
         this.size += 1;
@@ -52,8 +57,8 @@ class LinkedList {
       }
     }
 
-    let temp_head: ListNode | null = this.head;
-    let previous_node: ListNode | null = this.head;
+    let temp_head: SinglyNode | null = this.head;
+    let previous_node: SinglyNode | null = this.head;
 
     for (let i = 0; i < target_index; i++) {
       if (i === target_index - 1) {
@@ -67,7 +72,7 @@ class LinkedList {
     }
 
     if (previous_node) {
-      const new_node = new ListNode(value, previous_node?.next_node);
+      const new_node = new SinglyNode(value, previous_node?.next_node);
       previous_node.next_node = new_node;
       this.size += 1;
       return true;
@@ -83,7 +88,9 @@ class LinkedList {
 
     // handle replace first linked list item
     if (target_index === 0) {
-      const new_node = new ListNode(value, this.head?.next_node);
+      if (!this.head) return false;
+
+      const new_node = new SinglyNode(value, this.head.next_node);
       this.head = new_node;
       return true;
     }
@@ -105,7 +112,7 @@ class LinkedList {
 
       // replacing last item
       if (temp_head) {
-        const new_node = new ListNode(value, null);
+        const new_node = new SinglyNode(value, null);
         temp_head.next_node = new_node;
         this.tail = new_node;
         return true;
@@ -128,7 +135,7 @@ class LinkedList {
 
     if (previous_node?.next_node) {
       const target_node_to_replace = previous_node.next_node;
-      const new_node = new ListNode(value, target_node_to_replace.next_node);
+      const new_node = new SinglyNode(value, target_node_to_replace.next_node);
       target_node_to_replace.next_node = null;
       previous_node.next_node = new_node;
     }
@@ -144,7 +151,7 @@ class LinkedList {
     // if linked list has only one item then call removeFirstMethod
     if (this.size == 1) return this.removeFirst();
 
-    let second_last_node: ListNode = this.head;
+    let second_last_node: SinglyNode = this.head;
 
     // linked list           =   [1], [2], [3], [4], [5], [6]
     // linked list indexes   =    0    1    2    3    4    5
@@ -194,8 +201,8 @@ class LinkedList {
     if (target_item_index === this.size - 1) return this.removeLast();
 
     // initializing the target index and the index previous to the target index variables
-    let target_node_to_remove: ListNode | null = this.head;
-    let node_before_target: ListNode | null = this.head;
+    let target_node_to_remove: SinglyNode | null = this.head;
+    let node_before_target: SinglyNode | null = this.head;
 
     // loop until value of i reaches the target_item_index -1. In this loop it always stops at the index previous to the target index
     // the reason for stopping at the previous list item is because the target list item don't have link to the previous node.
@@ -211,7 +218,7 @@ class LinkedList {
 
     if (target_node_to_remove !== null && node_before_target !== null) {
       //    getting the list item next to the target list item
-      const node_after_target: ListNode | null =
+      const node_after_target: SinglyNode | null =
         target_node_to_remove.next_node;
 
       //   setting previous list item's next value to the next list item of the target list item
@@ -233,7 +240,7 @@ class LinkedList {
     if (this.head === null) return false;
 
     // we are not moving the actual inked list head for search items
-    let temp_head: ListNode | null = this.head;
+    let temp_head: SinglyNode | null = this.head;
 
     // loop until a list item contains the target data
     for (let i = 0; i < this.size; i++) {
@@ -256,7 +263,7 @@ class LinkedList {
     // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
     if (this.head === null) return false;
 
-    let temp_head: ListNode | null = this.head;
+    let temp_head: SinglyNode | null = this.head;
     let data_found: boolean = false;
     let item_count: number = 0;
 
@@ -277,12 +284,12 @@ class LinkedList {
   }
 
   //   search item by given index
-  public searchByIndex(target_item_index: number): ListNode | null {
+  public searchByIndex(target_item_index: number): SinglyNode | null {
     // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
     if (!this.isValidIndex(target_item_index)) return null;
 
-    let target_node: ListNode | null = null;
-    let temp_head: ListNode | null = this.head;
+    let target_node: SinglyNode | null = null;
+    let temp_head: SinglyNode | null = this.head;
     let item_count: number = 0;
 
     // loop until the item_count equals to target_item_index
@@ -303,7 +310,7 @@ class LinkedList {
 
   //   print all the elements in the linked list
   public printList(): void {
-    let temp_head: ListNode | null = this.head;
+    let temp_head: SinglyNode | null = this.head;
 
     let items: string[] = [];
 
@@ -330,114 +337,117 @@ class LinkedList {
 }
 
 // List item class
-class ListNode {
+class SinglyNode {
   //   reference to the next list item
-  next_node: ListNode | null;
+  next_node: SinglyNode | null;
 
   //   value of the list item
   value: number;
 
-  constructor(value, next_node) {
+  constructor(value: number, next_node: SinglyNode | null) {
     this.value = value;
     this.next_node = next_node;
   }
-
-  public getValue(): number {
-    return this.value;
-  }
 }
 
-// ================================================= Perform operations on Linked List =========================================================
-const linkedList = new LinkedList();
+// ==================================== END OF SINGLY LINKED LIST IMPLEMENTATION =============================================
+
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________________
+
+// ============================================= LINKED LIST OPERATIONS ======================================================
+
+const singlyLinkedList = new SinglyLinkedList();
 
 console.log("== Empty list ==");
-linkedList.printList();
+singlyLinkedList.printList();
 
 // adding items
-linkedList.insert(2);
-linkedList.insert(24);
-linkedList.insert(4);
-linkedList.insert(6);
-linkedList.insert(10);
-linkedList.insert(15);
-linkedList.insert(18);
-linkedList.insert(32);
+singlyLinkedList.insert(2);
+singlyLinkedList.insert(24);
+singlyLinkedList.insert(4);
+singlyLinkedList.insert(6);
+singlyLinkedList.insert(10);
+singlyLinkedList.insert(15);
+singlyLinkedList.insert(18);
+singlyLinkedList.insert(32);
 
 console.log("== Added items to the list ==");
-linkedList.printList();
+singlyLinkedList.printList();
 
 // removing first item
-linkedList.removeFirst();
+singlyLinkedList.removeFirst();
 console.log("== Removing first item ==");
-linkedList.printList();
+singlyLinkedList.printList();
 
 // removing last item
-linkedList.removeLast();
+singlyLinkedList.removeLast();
 console.log("== Removing last item ==");
-linkedList.printList();
+singlyLinkedList.printList();
 
 // removing item by index
-linkedList.removeItemByIndex(4);
+singlyLinkedList.removeItemByIndex(4);
 console.log("== Removing item by index : target index -> 4 ==");
-linkedList.printList();
+singlyLinkedList.printList();
 
 // removing item by index
-linkedList.removeItemByData(10);
+singlyLinkedList.removeItemByData(10);
 console.log("== Removing item by data : target data -> 10  ==");
-linkedList.printList();
+singlyLinkedList.printList();
 
 // search linked list item by data
 console.log("== Search linked list item by data : target data -> 20  ==");
 console.log(
   " 'data - 20' exists in linked list -> ",
-  linkedList.searchByData(20)
+  singlyLinkedList.searchByData(20)
 );
 
 // search linked list item by index
 console.log("== Search linked list item by index : target index -> 2  ==");
 console.log(
   " 'index - 2' exists in linked list -> ",
-  linkedList.searchByIndex(2)
+  singlyLinkedList.searchByIndex(2)
 );
 
 // insert data in to a specific index in linked list
 console.log(
   "== Insert data in to a specific index in linked list <Start> [value => 1000, index => 0]=="
 );
-linkedList.insertAt(1000, 0);
-linkedList.printList();
+singlyLinkedList.insertAt(1000, 0);
+singlyLinkedList.printList();
 
 // replace data in to a specific index in linked list
 console.log(
   "== Replace data in to a specific index in linked list <Middle> [value => 255, index => 3] =="
 );
-linkedList.insertAt(255, 3);
-linkedList.printList();
+singlyLinkedList.insertAt(255, 3);
+singlyLinkedList.printList();
 
 // replace data in to a specific index in linked list
 console.log(
   "== Insert data in to a specific index in linked list <End> [value => 500, index => 6] =="
 );
-linkedList.insertAt(500, 5);
-linkedList.printList();
+singlyLinkedList.insertAt(500, 5);
+singlyLinkedList.printList();
 
 // replace data at a specific index in linked list
 console.log(
   "== Replace data at a specific index in linked list <Start> [value => 1, index => 0] =="
 );
-linkedList.replaceValueAt(1, 0);
-linkedList.printList();
+singlyLinkedList.replaceValueAt(1, 0);
+singlyLinkedList.printList();
 
 // replace data at a specific index in linked list
 console.log(
   "== Replace data at a specific index in linked list <Middle> [value => 200, index => 5] =="
 );
-linkedList.replaceValueAt(200, 5);
-linkedList.printList();
+singlyLinkedList.replaceValueAt(200, 5);
+singlyLinkedList.printList();
 
 // replace data at a specific index in linked list
 console.log(
   "== Replace data at a specific index in linked list <End> [value => 88, index => 6]=="
 );
-linkedList.replaceValueAt(88, 6);
-linkedList.printList();
+singlyLinkedList.replaceValueAt(88, 6);
+singlyLinkedList.printList();
