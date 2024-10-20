@@ -21,18 +21,19 @@ class SinglyLinkedList {
     if (this.head === null) {
       this.head = new_node;
       this.tail = new_node;
-      this.size += 1;
+      this.increaseItemCount();
       return;
     }
 
-    // if the linked list is not empty
+    // if linked list is not empty then link new node at the end of it
+    // then the new node is the tail of the linked list
     if (this.tail) {
       this.tail.next_node = new_node;
     }
 
     // pointing tail to the newly added item to the linked list
     this.tail = new_node;
-    this.size += 1;
+    this.increaseItemCount();
   }
 
   //   insert a list not in to an index in linked list
@@ -43,7 +44,7 @@ class SinglyLinkedList {
     if (target_index === 0) {
       const new_node = new SinglyNode(value, this.head);
       this.head = new_node;
-      this.size += 1;
+      this.increaseItemCount();
       return true;
     }
 
@@ -52,7 +53,7 @@ class SinglyLinkedList {
         const new_node = new SinglyNode(value, null);
         this.tail.next_node = new_node;
         this.tail = new_node;
-        this.size += 1;
+        this.increaseItemCount();
         return true;
       }
     }
@@ -74,7 +75,7 @@ class SinglyLinkedList {
     if (previous_node) {
       const new_node = new SinglyNode(value, previous_node?.next_node);
       previous_node.next_node = new_node;
-      this.size += 1;
+      this.increaseItemCount();
       return true;
     }
 
@@ -173,7 +174,7 @@ class SinglyLinkedList {
 
     second_last_node.next_node = null;
     this.tail = second_last_node;
-    this.size -= 1;
+    this.decreaseItemCount();
 
     return true;
   }
@@ -184,7 +185,7 @@ class SinglyLinkedList {
 
     // moving the  head of the linked list to the second item of the linked list
     this.head = this.head.next_node;
-    this.size -= 1;
+    this.decreaseItemCount();
 
     return true;
   }
@@ -227,7 +228,7 @@ class SinglyLinkedList {
       //   setting next link of the target list item to null
       target_node_to_remove.next_node = null;
 
-      this.size = this.size - 1;
+      this.decreaseItemCount();
       return true;
     }
 
@@ -333,6 +334,14 @@ class SinglyLinkedList {
       return false;
 
     return true;
+  }
+
+  private increaseItemCount() {
+    this.size++;
+  }
+
+  private decreaseItemCount() {
+    this.size--;
   }
 }
 
