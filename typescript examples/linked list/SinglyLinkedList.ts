@@ -83,7 +83,7 @@ class SinglyLinkedList {
   }
 
   // replace any link list item at a index
-  public replaceValueAt(value: number, target_index): boolean {
+  public replaceItemAt(value: number, target_index): boolean {
     // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
     if (!this.isValidIndex(target_index)) return false;
 
@@ -444,19 +444,19 @@ singlyLinkedList.printList();
 console.log(
   "== Replace data at a specific index in linked list <Start> [value => 1, index => 0] =="
 );
-singlyLinkedList.replaceValueAt(1, 0);
+singlyLinkedList.replaceItemAt(1, 0);
 singlyLinkedList.printList();
 
 // replace data at a specific index in linked list
 console.log(
   "== Replace data at a specific index in linked list <Middle> [value => 200, index => 5] =="
 );
-singlyLinkedList.replaceValueAt(200, 5);
+singlyLinkedList.replaceItemAt(200, 5);
 singlyLinkedList.printList();
 
 // replace data at a specific index in linked list
 console.log(
   "== Replace data at a specific index in linked list <End> [value => 88, index => 6]=="
 );
-singlyLinkedList.replaceValueAt(88, 6);
+singlyLinkedList.replaceItemAt(88, 6);
 singlyLinkedList.printList();

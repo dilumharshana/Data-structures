@@ -11,10 +11,13 @@ class DoublyLinkedList {
     this.size = 0;
   }
 
+  //   insert an element in to linked list
   public insert(value: number): void {
     // if the linked list is empty
     if (this.head === null) {
+      // creating new list item
       const new_node = new DoublyListNode(value, null, null);
+
       this.head = new_node;
       this.tail = new_node;
       this.increaseItemCount();
@@ -24,7 +27,9 @@ class DoublyLinkedList {
     // if linked list is not empty then link new node at the end of it
     // then the new node is the tail of the linked list
     if (this.tail) {
+      // creating new list item
       const new_node = new DoublyListNode(value, this.tail, null);
+
       this.tail.next_node = new_node;
       this.tail = new_node;
       this.increaseItemCount();
@@ -32,12 +37,14 @@ class DoublyLinkedList {
     }
   }
 
+  //   insert a list not in to an index in linked list
   public insertAt(value: number, target_index: number): boolean {
     // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
     if (!this.isValidIndex(target_index)) return false;
 
     // handle first node insertion if given target index is 0
     if (target_index === 0) {
+      // creating new list item
       const new_node = new DoublyListNode(value, null, this.head);
 
       if (this.head) {
@@ -62,20 +69,87 @@ class DoublyLinkedList {
       }
     }
 
-    if (temp_head) {
+    if (temp_head?.next_node) {
+      // creating new list item
       const new_node = new DoublyListNode(
         value,
         temp_head,
         temp_head.next_node
       );
 
-      temp_head.next_node = new_node;
       temp_head.next_node.prev_node = new_node;
+      temp_head.next_node = new_node;
+
       this.increaseItemCount();
       return true;
     }
 
     return false;
+  }
+
+  // replace any link list item at a index
+  public replaceItemAt(value: number, target_index: number): boolean {
+    // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
+    if (!this.isValidIndex(target_index)) return false;
+
+    // if target index is 0 then replacing head
+    if (target_index === 0) {
+      if (!this.head) return false;
+
+      const new_node = new DoublyListNode(value, null, this.head?.next_node);
+
+      // setting the 1 st index list item's previous node to new node
+      if (this.head.next_node) {
+        this.head.next_node.prev_node = new_node;
+      }
+
+      this.head = new_node;
+      return true;
+    }
+
+    //if target index equals to tail then replace the tail
+    if (target_index === this.size - 1) {
+      // creating new list item
+
+      if (!this.tail?.prev_node) return false;
+
+      const new_node = new DoublyListNode(value, this.tail.prev_node, null);
+      this.tail.prev_node.next_node = new_node;
+      this.tail = new_node;
+      return true;
+    }
+
+    let temp_head: DoublyListNode | null = this.head;
+
+    // loop until temp_head equals to target_index
+    for (let i = 0; i <= target_index; i++) {
+      if (i === target_index) {
+        break;
+      }
+
+      if (temp_head) {
+        temp_head = temp_head.next_node;
+      }
+    }
+
+    // replacing new item with the existing item
+    if (!temp_head || !temp_head.prev_node || !temp_head.next_node)
+      return false;
+
+    // creating new list item
+    const new_node = new DoublyListNode(
+      value,
+      temp_head.prev_node,
+      temp_head.next_node
+    );
+
+    // setting existing item's -> previous item's -> next item to  -> new item
+    temp_head.prev_node.next_node = new_node;
+
+    // setting existing item's -> next item's -> previous item to -> new item
+    temp_head.next_node.prev_node = new_node;
+
+    return true;
   }
 
   //   print all the elements in the linked list
@@ -88,11 +162,10 @@ class DoublyLinkedList {
       items.push(`[${temp_head.value}]`);
       temp_head = temp_head.next_node;
     }
-    console.log(this.size);
     console.log("\n", "List => ", items, "\n");
   }
 
-  //print linked list in reverse order using previous node link
+  //   print linked list in reverse order using previous node link
   public printListReverse(): void {
     let temp_tail: DoublyListNode | null = this.tail;
 
@@ -106,7 +179,7 @@ class DoublyLinkedList {
     console.log("\n", "List in reverse => ", items, "\n");
   }
 
-  // user given index validate and head position validate helper function
+  //   user given index validate and head position validate helper function
   private isValidIndex(target_item_index: number): boolean {
     // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
     if (
@@ -179,6 +252,39 @@ console.log(
   "== Insert data in to a specific index in linked list <Start> [value => 1000, index => 0]=="
 );
 doublyLinkedList.insertAt(1000, 0);
+doublyLinkedList.printList();
+
+// insert data in to a specific index in linked list
+console.log(
+  "== Insert data in to a specific index in linked list <Middle> [value => 2000, index => 3]=="
+);
 doublyLinkedList.insertAt(2000, 3);
+doublyLinkedList.printList();
+
+// insert data in to a specific index in linked list
+console.log(
+  "== Insert data in to a specific index in linked list <End> [value => 3000, index => 6]=="
+);
 doublyLinkedList.insertAt(3000, 6);
+doublyLinkedList.printList();
+
+// replace data at a specific index in linked list
+console.log(
+  "== Replace data at a specific index in linked list <Start> [value => 1, index => 0] =="
+);
+doublyLinkedList.replaceItemAt(1, 0);
+doublyLinkedList.printList();
+
+// replace data at a specific index in linked list
+console.log(
+  "== Replace data at a specific index in linked list <Middle> [value => 80, index => 3] =="
+);
+doublyLinkedList.replaceItemAt(80, 3);
+doublyLinkedList.printList();
+
+// replace data at a specific index in linked list
+console.log(
+  "== Replace data at a specific index in linked list <End> [value => 55, index => 7] =="
+);
+doublyLinkedList.replaceItemAt(55, 7);
 doublyLinkedList.printList();
