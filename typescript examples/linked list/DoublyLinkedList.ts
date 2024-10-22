@@ -16,7 +16,7 @@ class DoublyLinkedList {
     // if the linked list is empty
     if (this.head === null) {
       // creating new list item
-      const new_node = new DoublyListNode(value, null, null);
+      const new_node: DoublyListNode = new DoublyListNode(value, null, null);
 
       this.head = new_node;
       this.tail = new_node;
@@ -28,7 +28,11 @@ class DoublyLinkedList {
     // then the new node is the tail of the linked list
     if (this.tail) {
       // creating new list item
-      const new_node = new DoublyListNode(value, this.tail, null);
+      const new_node: DoublyListNode | null = new DoublyListNode(
+        value,
+        this.tail,
+        null
+      );
 
       this.tail.next_node = new_node;
       this.tail = new_node;
@@ -71,7 +75,7 @@ class DoublyLinkedList {
 
     if (temp_head?.next_node) {
       // creating new list item
-      const new_node = new DoublyListNode(
+      const new_node: DoublyListNode = new DoublyListNode(
         value,
         temp_head,
         temp_head.next_node
@@ -87,7 +91,7 @@ class DoublyLinkedList {
     return false;
   }
 
-  // replace any link list item at a index
+  //   replace any link list item at a index
   public replaceItemAt(value: number, target_index: number): boolean {
     // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
     if (!this.isValidIndex(target_index)) return false;
@@ -137,7 +141,7 @@ class DoublyLinkedList {
       return false;
 
     // creating new list item
-    const new_node = new DoublyListNode(
+    const new_node: DoublyListNode = new DoublyListNode(
       value,
       temp_head.prev_node,
       temp_head.next_node
@@ -146,10 +150,193 @@ class DoublyLinkedList {
     // setting existing item's -> previous item's -> next item to  -> new item
     temp_head.prev_node.next_node = new_node;
 
+    // breaking the connection to the previous node from the target node
+    temp_head.prev_node = null;
+
     // setting existing item's -> next item's -> previous item to -> new item
     temp_head.next_node.prev_node = new_node;
 
+    // breaking the connection to the next node from the target node
+    temp_head.next_node = null;
+
     return true;
+  }
+
+  //   remove the first element of the linked list
+  public removeFirst(): boolean {
+    if (!this.head) return false;
+
+    let second_node: DoublyListNode | null = this.head?.next_node;
+
+    if (second_node) {
+      // breaking connection to the first node from the second node
+      second_node.prev_node = null;
+
+      // breaking the connection to the second node from the first node (current head.next)
+      this.head.next_node = null;
+
+      // making the second node as the new head
+      this.head = second_node;
+    } else {
+      // if the link list have only head then set the current head to null
+      this.head = null;
+    }
+
+    this.decreaseItemCount();
+
+    return true;
+  }
+
+  //   remove the last element of the linked list
+  public removeLast(): boolean {
+    if (!this.tail) return false;
+
+    // when linked list contains only one element
+    if (this.tail.prev_node === null) return this.removeFirst();
+
+    const second_last_node: DoublyListNode | null = this.tail.prev_node;
+
+    // breaking the connection to the last node (current tail) from the second last node
+    second_last_node.next_node = null;
+
+    // breaking the connection to the second last node from the last node (current tail.previous)
+    this.tail.prev_node = null;
+
+    // making the second last node as the new tail
+    this.tail = second_last_node;
+
+    this.decreaseItemCount();
+
+    return true;
+  }
+
+  //   remove list item by given index
+  public removeItemByIndex(target_index: number): boolean {
+    // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
+    if (!this.isValidIndex) return false;
+
+    if (target_index === 0) return this.removeFirst();
+
+    if (target_index === this.size - 1) return this.removeLast();
+
+    let temp_head: DoublyListNode | null = this.head;
+
+    // loop until i equals to target_index
+    for (let i = 0; i <= target_index; i++) {
+      if (i === target_index) {
+        break;
+      }
+
+      if (temp_head) {
+        temp_head = temp_head.next_node;
+      }
+    }
+
+    if (!temp_head) return false;
+
+    // node previous to the target node to be remove
+    let node_before_target: DoublyListNode | null = temp_head.prev_node;
+
+    // node next to the target node to be remove
+    let node_after_target: DoublyListNode | null = temp_head?.next_node;
+
+    if (!temp_head || !node_before_target || !node_after_target) return false;
+
+    temp_head.next_node = null;
+    temp_head.prev_node = null;
+
+    // setting the next and the previous connections of the two nodes either side of the target node to be removed
+    node_before_target.next_node = node_after_target;
+    node_after_target.prev_node = node_before_target;
+
+    this.decreaseItemCount();
+
+    return true;
+  }
+
+  //   remove list item by given data
+  public removeItemByData(target_value: number): boolean {
+    // if linked list is empty
+    if (this.head === null) return false;
+
+    // if given target_value equals to head target_value
+    if (target_value === this.head?.value) return this.removeFirst();
+
+    // if given target_value equals to tail target_value
+    if (target_value === this.tail?.value) return this, this.removeLast();
+
+    let temp_head: DoublyListNode | null = this.head.next_node;
+    let target_node_index: number = 1;
+
+    //loop all over the linked list from second node to second last node until temp_head.value equals to target value
+    for (let i = 1; i <= this.size - 2; i++) {
+      if (temp_head?.value === target_value) {
+        target_node_index = i;
+        break;
+      }
+
+      if (temp_head) {
+        temp_head = temp_head?.next_node;
+      }
+    }
+
+    return this.removeItemByIndex(target_node_index);
+  }
+
+  //   search list item by given data
+  public searchByData(target_value: number): boolean {
+    if (this.head === null) return false;
+
+    if (this.head?.value === target_value) return true;
+
+    if (this.tail?.value === target_value) return true;
+
+    let temp_head: DoublyListNode | null = this.head.next_node;
+    let data_found: boolean = false;
+
+    //loop all over the linked list from second node to second last node until temp_head equals to target_value
+    for (let i = 1; i <= this.size - 2; i++) {
+      // if temp_head value equals to the given target value
+      if (temp_head?.value === target_value) {
+        data_found = true;
+        break;
+      }
+
+      if (temp_head) {
+        temp_head = temp_head.next_node;
+      }
+    }
+
+    return data_found;
+  }
+
+  //   search list item by given index
+  public searchByIndex(target_index: number): DoublyListNode | null {
+    // stop the function execution if the head is null, if target_item_index is an negative value or target_item_index is greater than list size
+    if (!this.isValidIndex(target_index)) return null;
+
+    // if given index is 0 return current head
+    if (target_index === 0) return this.head;
+
+    // if given index equals to tail index return current tail
+    if (target_index === this.size - 1) return this.tail;
+
+    if (!this.head) return null;
+
+    let temp_head: DoublyListNode | null = this.head.next_node;
+
+    //loop all over the linked list from second node to second last node until i equals to target_index
+    for (let i = 1; i < this.size - 2; i++) {
+      if (i === target_index) {
+        break;
+      }
+
+      if (temp_head) {
+        temp_head = temp_head.next_node;
+      }
+    }
+
+    return temp_head;
   }
 
   //   print all the elements in the linked list
@@ -288,3 +475,37 @@ console.log(
 );
 doublyLinkedList.replaceItemAt(55, 7);
 doublyLinkedList.printList();
+
+// removing first item
+console.log("== Removing first item ==");
+doublyLinkedList.removeFirst();
+doublyLinkedList.printList();
+
+// removing last item
+console.log("== Removing last item ==");
+doublyLinkedList.removeLast();
+doublyLinkedList.printList();
+
+// removing item by index
+console.log("== Removing item by index : target index -> 1 ==");
+doublyLinkedList.removeItemByIndex(1);
+doublyLinkedList.printList();
+
+// removing item by index
+console.log("== Removing item by data : target data -> 6  ==");
+doublyLinkedList.removeItemByData(6);
+doublyLinkedList.printList();
+
+// search linked list item by data
+console.log("== Search linked list item by data : target data -> 4  ==");
+console.log(
+  " 'data - 20' exists in linked list -> ",
+  doublyLinkedList.searchByData(20)
+);
+
+// search linked list item by index
+console.log("== Search linked list item by index : target index -> 2  ==");
+console.log(
+  " 'index - 2' exists in linked list -> ",
+  doublyLinkedList.searchByIndex(2)
+);
