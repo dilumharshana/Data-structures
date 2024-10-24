@@ -410,7 +410,7 @@ class DoublyListNode {
   }
 }
 
-// ==================================== END OF SINGLY LINKED LIST IMPLEMENTATION =============================================
+// ==================================== END OF DOUBLY LINKED LIST IMPLEMENTATION =============================================
 
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________________
@@ -418,7 +418,7 @@ class DoublyListNode {
 
 // ============================================= LINKED LIST OPERATIONS ======================================================
 
-const doublyLinkedList = new DoublyLinkedList();
+const doublyLinkedList: DoublyLinkedList = new DoublyLinkedList();
 
 console.log("== Empty list ==");
 doublyLinkedList.printList();

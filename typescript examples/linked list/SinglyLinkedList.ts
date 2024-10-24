@@ -367,7 +367,7 @@ class SinglyNode {
 
 // ============================================= LINKED LIST OPERATIONS ======================================================
 
-const singlyLinkedList = new SinglyLinkedList();
+const singlyLinkedList: SinglyLinkedList = new SinglyLinkedList();
 
 console.log("== Empty list ==");
 singlyLinkedList.printList();
