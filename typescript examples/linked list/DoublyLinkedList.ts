@@ -1,9 +1,9 @@
 // ==================================== DOUBLY LINKED LIST IMPLEMENTATION =============================================
 
 class DoublyLinkedList {
-  head: DoublyListNode | null;
-  tail: DoublyListNode | null;
-  size: number;
+  private head: DoublyListNode | null;
+  private tail: DoublyListNode | null;
+  private size: number;
 
   constructor() {
     this.head = null;
